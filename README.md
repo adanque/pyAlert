@@ -2,15 +2,16 @@
 
 ## Pythonic Alerts Framework
 
-Author: Alan Danque
+<a href="https://www.linkedin.com/in/alandanque"> Author: Alan Danque </a>
 
-Date:	20210331
+<a href="https://adanque.github.io/">Click here to go back to Portfolio Website </a>
 
-Purpose:Allows for logging, reporting and email group subscription with sender/reciever configuration of SendAll, SendOnlyFail&War, or SendOnlyFail Email Alerts
-Status: Under construction
+![A remote image](https://adanque.github.io/assets/img/work-analytics.jpg)
 
 
 ## Abstract:
+
+Purpose:Allows for logging, reporting and email group subscription with sender/reciever configuration of SendAll, SendOnlyFail&War, or SendOnlyFail Email Alerts
 
 Under construction: The intention for this is to log, track and configure email alerts from Python applications. With the email subscription model and a configuration area for if a recipient wants to receive all emails ie successful/fail/warn or fail/warn or just fail notifications.
 
