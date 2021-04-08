@@ -1,4 +1,4 @@
-# pyAlerts
+# pyAlert
 
 ## Pythonic Alerts Framework
 
