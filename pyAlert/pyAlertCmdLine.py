@@ -4,7 +4,7 @@ Purpose:    Py Email Alert Sender
 Date:       20210331
 usage: 		py -m E:\pyAlerts\pyAlert "TEST EMAIL SUBJECT TEXT" "TEST MESSAGE TEXT" "sender_email_addres_ie_adanque@eqr.com" "EMAIL_GROUP_NAME"
 """
-import os 
+import os
 import smtplib
 import email
 from email.mime.multipart import MIMEMultipart
@@ -24,9 +24,36 @@ if __name__ == '__main__':
         errors={}
         error_out={}
         err = 0
+        torecipients = []
+        ccrecipients = []
+        bccrecipients = []
         errors['starttime'] = str(datetime.now())
         message = email.message.Message()
-        message['To'] = to
+        loopEmlist = to.split(",")
+        for e in loopEmlist:
+            emout = ""
+            if "to:" in e:
+                emout = e.replace('to:','')
+                torecipients.append(emout)
+            if "cc:" in e and "bcc:" not in e:
+                emout = e.replace('cc:','')
+                ccrecipients.append(emout)
+            if "bcc:" in e:
+                emout = e.replace('bcc:','')
+                bccrecipients.append(emout)
+        torecipients_str = ",".join(torecipients)
+        ccrecipients_str = ",".join(ccrecipients)
+        bccrecipients_str = ",".join(bccrecipients)
+        print("torecipients_str")
+        print(torecipients_str)
+        print("ccrecipients_str")
+        print(ccrecipients_str)
+        print("bccrecipients_str")
+        print(bccrecipients_str)
+        
+        message['To'] = torecipients_str
+        message['Cc'] = ccrecipients_str
+        message['Bcc'] = bccrecipients_str
         message['From'] = sender
         message['Subject'] = subject
         message.set_payload(body)
