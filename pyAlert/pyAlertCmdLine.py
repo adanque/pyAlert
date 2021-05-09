@@ -41,11 +41,19 @@ if __name__ == '__main__':
             if "bcc:" in e:
                 emout = e.replace('bcc:','')
                 bccrecipients.append(emout)
-        torecipients_str = ",".join(torecipients)
-        ccrecipients_str = ",".join(ccrecipients)
-        bccrecipients_str = ",".join(bccrecipients)
+
+        torecipients_str = ", ".join(torecipients)
+        ccrecipients_str = ", ".join(ccrecipients)
+        bccrecipients_str = ", ".join(bccrecipients)
+
+        print("loopEmlist")
+        print(type(loopEmlist))
+        print(loopEmlist)
+
         print("torecipients_str")
         print(torecipients_str)
+        print(type(torecipients_str))
+
         print("ccrecipients_str")
         print(ccrecipients_str)
         print("bccrecipients_str")
@@ -60,7 +68,7 @@ if __name__ == '__main__':
         #server = smtplib.SMTP(server)
         try:
             server = smtplib.SMTP(server)
-            server.sendmail(sender, to, message.as_string())
+            server.sendmail(sender, (torecipients+ccrecipients+bccrecipients), message.as_string())
         except Exception as e:
             errval = "Email Send: Exception!  Err: "+str(e)
             errors['ExecutionStatus'] = errval
@@ -77,6 +85,10 @@ if __name__ == '__main__':
         error_out={}
         err = 0
         errors['starttime'] = str(datetime.now())
+        punc = """!()-[]{};:'"\, <>./?@#$%^&*_~"""
+        for ele in msg:
+            if ele in punc:
+                msg = msg.replace(ele, "")        
         if sqlcmd_type == "uP_prepEmail":
             sqlcmd = "declare @OUTVAL varchar(max) exec pyAlerts..[uP_prepEmail] @EMAILGROUP = '{}',@subj = '{}',@msg = '{}',@sender = '{}',@critical_type = {},@OUTVAL = @OUTVAL OUTPUT select @OUTVAL ".format(emailgroup, subj, msg, sender, critical_type)
         elif sqlcmd_type == "uP_updtEmailLog":

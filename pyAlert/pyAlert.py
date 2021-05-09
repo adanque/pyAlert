@@ -59,7 +59,7 @@ def send(sender, to, server, subject='None', body='None'):
     #server = smtplib.SMTP(server)
     try:
         server = smtplib.SMTP(server)
-        server.sendmail(sender, to, message.as_string())
+        server.sendmail(sender, (torecipients+ccrecipients+bccrecipients), message.as_string())
     except Exception as e:
         errval = "Email Send: Exception!  Err: "+str(e)
         errors['ExecutionStatus'] = errval
@@ -77,6 +77,11 @@ def executeSQL(sqlserver, sqldatabase, emailgroup, critical_type, subj, msg, sen
     error_out={}
     err = 0
     errors['starttime'] = str(datetime.now())
+    punc = """!()-[]{};:'"\, <>./?@#$%^&*_~"""
+    for ele in msg:
+        if ele in punc:
+            msg = msg.replace(ele, "")
+    
     if sqlcmd_type == "uP_prepEmail":
         sqlcmd = "declare @OUTVAL varchar(max) exec pyAlerts..[uP_prepEmail] @EMAILGROUP = '{}',@subj = '{}',@msg = '{}',@sender = '{}',@critical_type = {},@OUTVAL = @OUTVAL OUTPUT select @OUTVAL ".format(emailgroup, subj, msg, sender, critical_type)
     elif sqlcmd_type == "uP_updtEmailLog":
@@ -180,6 +185,8 @@ def sendmail(subj, msg, sender, emailgroup):
             errortext = cfg["pyAlertsCfg"].get("errortext") 
             defaultexceptionnotifier = cfg["pyAlertsCfg"].get("defaultexceptionnotifier") 
             pyserver = cfg["pyAlertsCfg"].get("pyserver") 
+            wenv = cfg["pyAlertsCfg"].get("Environment") 
+            
         except yaml.YAMLError as exc:
             print(exc)
     server = SMTPSERVER            
@@ -217,7 +224,10 @@ def sendmail(subj, msg, sender, emailgroup):
     status_id=""
     ret_msg=""
     email_recipient_cfg = executeSQL(sqlserver, sqldatabase, emailgroup, critical_type, subj, msg, sender, RetSQLAlertCode, email_mid, status_id, ret_msg, sqlcmd_type)
+    print(msg)
     print("uP_prepEmail Status:")
+    print(email_recipient_cfg)
+    print("uP_prepEmail Status FINISH:")
     # Verify the uP_prepEmail log entry had issues. Attempt to send email if there are issues
     checkexception = "Exception! Duration"
     if email_recipient_cfg in checkexception:
